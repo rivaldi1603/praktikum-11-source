@@ -20,6 +20,8 @@
     <title layout:title-pattern="$CONTENT_TITLE">Spring Boot Todolist</title>
 
     <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <link
       rel="stylesheet"
       th:href="@{/assets/vendor/bootstrap-5.3.8-dist/css/bootstrap.min.css}"
@@ -35,6 +37,38 @@
   </head>
 
   <body class="bg-light">
+    <!-- Navbar -->
+    <!-- Kita hanya menampilkan navbar jika user sudah login (objek 'user' ada) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm" th:if="${user != null}">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img th:src="@{/assets/images/logo.png}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+                My App
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/todos}">Todos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cash-flows}">Cash Flow</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center text-white">
+                    <!-- Pastikan akses properti name aman -->
+                    <span class="me-3" th:text="${user.name}">User</span>
+                    <a th:href="@{/auth/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <!-- Slot untuk konten -->
     <div layout:fragment="content" class="container-fluid">
       <!-- Konten akan diisi oleh child templates -->
@@ -53,28 +87,33 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         /* Ambil pesan sukses dari thymeleaf */
+        // Menggunakan th:inline="javascript" atau syntax [[...]] yang benar
         const successMessage = "[[${success}]]";
-        if (successMessage && successMessage.length > 5) {
+        
+        if (successMessage && successMessage.trim() !== "" && successMessage !== "null") {
           Swal.fire({
             icon: "success",
-            title: "Berhasil Melakukan Tindakan",
+            title: "Berhasil",
             text: successMessage,
-            showConfirmButton: true,
+            showConfirmButton: false,
+            timer: 1500
           });
         }
 
         /* Ambil pesan error dari thymeleaf */
         const errorMessage = "[[${error}]]";
-        if (errorMessage && errorMessage.length > 5) {
+        
+        if (errorMessage && errorMessage.trim() !== "" && errorMessage !== "null") {
           Swal.fire({
             icon: "error",
-            title: "Gagal Melakukan Tindakan",
+            title: "Gagal",
             text: errorMessage,
             showConfirmButton: true,
           });
         }
       });
     </script>
+
 
     <!-- Slot untuk JavaScript tambahan -->
     <th:block layout:fragment="others-js"></th:block>

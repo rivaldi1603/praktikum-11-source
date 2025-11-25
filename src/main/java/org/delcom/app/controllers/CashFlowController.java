@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController // Ini adalah API Controller, bukan View Controller
+@RestController
 @RequestMapping("/api/cash-flows")
 public class CashFlowController {
 
@@ -26,11 +26,8 @@ public class CashFlowController {
         this.cashFlowService = cashFlowService;
     }
 
-    // Metode yang diharapkan oleh CashFlowControllerTests.java
-
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, UUID>>> createCashFlow(@RequestBody CashFlow reqCashFlow) {
-        // Validasi dan logika bisnis (Sama seperti P10)
         if (reqCashFlow.getAmount() == null || reqCashFlow.getAmount() <= 0) {
             return ResponseEntity.badRequest().body(new ApiResponse<>("fail", "Data tidak valid", null));
         }
